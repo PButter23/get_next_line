@@ -12,9 +12,67 @@
 
 #include "get_next_line.h"
 
-int	ft_find_line(char *buffer, int fd)
+int	ft_read_file(char *buffer, int fd)
 {	
+	char	*stash;
+	ssize_t	bytes;
+
+	stash = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!stash)
+		return (NULL);
+	bytes = 1;
+	while (!strchr(stash, '\n') && bytes > 0)
+	{
+		bytes = read(fd, stash, BUFFER_SIZE);
+		if (bytes == -1)
+			return (free(stash), free(buffer), NULL);
+		stash[bytes] = '\0';
+		buffer = strjoin(buffer, stash);
+		if (!buffer)
+		{
+			free(stash);
+			return (NULL);
+		}
+	}
+	free(stash);
+	return (buffer);
+}
+
+char	*ft_extract_line(char *buffer)
+{
+	char	*line;
+	int	ct;
+
+	ct = 0;
+	if (!buffer)
+		return (NULL);
+	while (buffer[ct] != '\n' && buffer[ct] != '\0')
+		ct++;
+	line = (char *)malloc((ct + 2) * sizeof(char));
+	ct = 0;
+	while (buffer[ct] != '\n' && buffer[ct] != '\0')
+	{
+		line[ct] = buffer[ct];
+		ct++;
+	}
+	if (buffer[ct] == '\n')
+	{
+		line[ct] = '\n';
+		ct++;
+	}
+	line[ct] = '\0';
+	return (line);
+}
+
+char	*ft_update_buffer(char *buffer)
+{
+	int	ct;
+	char	*extra_buffer;
+	int	i;
+
+	ct = strchr(buffer, '\n');
 	
+
 }
 
 char	*get_next_line(int fd)
@@ -24,11 +82,14 @@ char	*get_next_line(int fd)
 
 	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (NULL);
+		buffer = ft_read_file(buffer, fd);
 	if (!buffer)
 	{
 		buffer = ft_calloc(1, sizeof(char));
 		if (!buffer);
 			return (NULL);
 	}
-
+	line = ft_extract_line(buffer);
+	buffer = ft_update_buffer(buffer);
+	return (line);
 }

@@ -42,3 +42,41 @@ char	*ft_strchr(const char *s, int c)
 		return ((char *)&s[ct]);
 	return (NULL);
 }
+
+int	strlen(char	*buffer)
+{
+	int	len;
+
+	len = 0;
+	while (buffer[len] != '\n' || buffer[len] != '\0' && len <= BUFFER_SIZE)
+		len++;
+	return (len);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*n;
+	int		ct;
+	int		c;
+
+	c = ft_strlen((char *)s1);
+	ct = ft_strlen((char *)s2);
+	n = (char *)malloc(ct + c + 1);
+	if (n == NULL)
+		return (NULL);
+	ct = 0;
+	c = 0;
+	while (s1[ct] != '\0')
+	{
+		n[ct] = s1[ct];
+		ct++;
+	}
+	while (s2[c] != '\0')
+	{
+		n[ct] = s2[c];
+		ct++;
+		c++;
+	}
+	n[ct] = '\0';
+	return (n);
+}
