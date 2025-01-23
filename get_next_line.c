@@ -68,11 +68,25 @@ char	*ft_update_buffer(char *buffer)
 {
 	int	ct;
 	char	*extra_buffer;
-	int	i;
+	int	len;
+	int	newct;
 
-	ct = strchr(buffer, '\n');
-	
-
+	newct = 0;
+	ct = strchr(buffer, '\n') - buffer;
+	if (ct == -1)
+		return (NULL);
+	len = strlen(buffer);
+	extra_buffer = (char *)malloc((len - ct) * sizeof(char));
+	if (!extra_buffer)
+		return (NULL);
+	while (buffer[ct + 1 + newct] != '\0')
+	{
+		extra_buffer[newct] = buffer[ct + 1 + newct];
+		newct++;
+	}
+	extra_buffer[newct] = '\0';
+	buffer[ct] = '\0';
+	return (extra_buffer);
 }
 
 char	*get_next_line(int fd)
